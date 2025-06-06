@@ -1,0 +1,19 @@
+username = request.session.get('username')
+    if not username:
+        return redirect('login')
+
+    # Remove old delete logic, only handle displaying items now
+    stock_items = StockItem.objects()
+    return render(request, 'delete_stock_items.html', {'stock_items': stock_items})
+=======
+def delete_stock_items(request):
+    username = request.session.get('username')
+    if not username:
+        return redirect('login')
+
+    query = request.GET.get('q', '')
+    if query:
+        stock_items = StockItem.objects(item_name__icontains=query)
+    else:
+        stock_items = StockItem.objects()
+    return render(request, 'delete_stock_items.html', {'stock_items': stock_items, 'query': query})

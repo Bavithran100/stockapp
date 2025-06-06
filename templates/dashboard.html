@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .dashboard-container {
+            background: white;
+            padding: 40px 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 400px;
+            text-align: center;
+            animation: fadeIn 0.8s ease forwards;
+        }
+        h2 {
+            margin-bottom: 40px;
+            font-weight: 700;
+            color: #333;
+        }
+        .dashboard-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 0;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .dashboard-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+        .logout-link {
+            display: block;
+            margin-top: 30px;
+            font-size: 16px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .logout-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <h2>Welcome to Your Dashboard, {{ username }}</h2>
+        <a href="{% url 'add_stock_item' %}" class="dashboard-button">➕ Add Stock Item</a>
+        <a href="{% url 'view_stock_items' %}" class="dashboard-button">📋 View Stock Items</a>
+        <a href="{% url 'low_stock_alerts' %}" class="dashboard-button">⚠️ Show Low Stock Alerts</a>
+        <a href="{% url 'delete_stock_items' %}" class="dashboard-button">🗑️ Delete Stock Items</a>
+        <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+    </div>
+</body>
+</html>
