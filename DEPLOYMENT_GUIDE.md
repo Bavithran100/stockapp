@@ -1,0 +1,67 @@
+- type: web
+    name: stock-track-pro
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: MONGODB_URI
+        value: "mongodb+srv://Bavithran:bavi0914o@cluster0.ez3remi.mongodb.net/mydb?retryWrites=true&w=majority&appName=Cluster0"
+      - key: DJANGO_SETTINGS_MODULE
+        value: "myproject.settings"
+      - key: PYTHONPATH
+        value: "."
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
+      - key: SECURE_HSTS_SECONDS
+        value: "31536000"
+      - key: SECURE_HSTS_INCLUDE_SUBDOMAINS
+        value: "True"
+      - key: SECURE_HSTS_PRELOAD
+        value: "True"
+      - key: SESSION_COOKIE_SECURE
+        value: "True"
+      - key: CSRF_COOKIE_SECURE
+        value: "True"
+=======
+services:
+  - type: web
+    name: stock-track-pro
+    env: python
+    rootDir: myproject  # ⚠️ CRITICAL: Set this to your Django project directory
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: MONGODB_URI
+        value: "mongodb+srv://Bavithran:bavi0914o@cluster0.ez3remi.mongodb.net/mydb?retryWrites=true&w=majority&appName=Cluster0"
+      - key: DJANGO_SETTINGS_MODULE
+        value: "myproject.settings"
+      - key: PYTHONPATH
+        value: "."
+      - key: SECURE_SSL_REDIRECT
+        value: "True"
+      - key: SECURE_HSTS_SECONDS
+        value: "31536000"
+      - key: SECURE_HSTS_INCLUDE_SUBDOMAINS
+        value: "True"
+      - key: SECURE_HSTS_PRELOAD
+        value: "True"
+      - key: SESSION_COOKIE_SECURE
+        value: "True"
+      - key: CSRF_COOKIE_SECURE
+        value: "True"

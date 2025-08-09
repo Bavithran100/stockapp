@@ -77,22 +77,24 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 # Database configuration
 # -------------------------
 # Use MongoDB for production, fallback to SQLite for local development
-if os.environ.get('DATABASE_URL'):
-    # Parse MongoDB URI from DATABASE_URL if provided
-    MONGODB_URI = os.environ.get('DATABASE_URL')
-else:
-    MONGODB_URI = os.environ.get(
-        'MONGODB_URI',
-        'mongodb+srv://Bavithran:bavi0914o@cluster0.ez3remi.mongodb.net/mydb?retryWrites=true&w=majority&appName=Cluster0'
-    )
+MONGODB_URI = os.environ.get('MONGODB_URI') or os.environ.get('DATABASE_URL')
 
-# Disconnect any existing default connection before connecting
-try:
-    disconnect(alias='default')
-    connect(host=MONGODB_URI)
-except Exception as e:
-    print(f"Warning: Could not connect to MongoDB: {e}")
-    # Fallback to SQLite for development
+if MONGODB_URI:
+    try:
+        disconnect(alias='default')
+        connect(host=MONGODB_URI)
+        DATABASES = {}  # MongoDB doesn't use DATABASES
+    except Exception as e:
+        print(f"Warning: Could not connect to MongoDB: {e}")
+        # Fallback to SQLite for development
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
+else:
+    # Fallback to SQLite if no MongoDB URI provided
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -131,6 +133,11 @@ if not DEBUG:
     # Cookie security
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    
+    # Additional security headers
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = 'DENY'
     
     # Use environment SECRET_KEY in production
     SECRET_KEY = os.environ.get('SECRET_KEY')
