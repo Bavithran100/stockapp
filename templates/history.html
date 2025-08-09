@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>View Stock Items</title>
+    <title>Stock History</title>
     {% load static %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
     <a href="{% url 'dashboard' %}" class="back-to-dashboard">← Back to Dashboard</a>
-    <h2>View Stock Items</h2>
+    <h2>Stock History</h2>
     <form method="get" class="search-box">
         <input type="text" name="q" placeholder="Search by item name..." value="{{ query }}">
         <button type="submit">Search</button>
@@ -15,25 +15,29 @@
     <table>
         <thead>
             <tr>
+                <th>Action</th>
                 <th>Item Name</th>
-                <th>Time</th>
-                <th>Date</th>
-                <th>Where Bought From</th>
-                <th>Quantity</th>
+                <th>Details</th>
+                <th>Timestamp</th>
             </tr>
         </thead>
         <tbody>
-            {% for item in stock_items %}
+            {% for log in logs %}
             <tr>
-                <td>{{ item.item_name }}</td>
-                <td>{{ item.time }}</td>
-                <td>{{ item.date }}</td>
-                <td>{{ item.where_bought_from }}</td>
-                <td>{{ item.quantity }}</td>
+                <td class="action-{{ log.action }}">{{ log.action|title }}</td>
+                <td>{{ log.item_name }}</td>
+                <td style="white-space: pre-line;">
+                    {% if log.details %}
+                        {{ log.details }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </td>
+                <td>{{ log.timestamp|date:"Y-m-d H:i:s" }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5">No stock items found.</td>
+                <td colspan="4">No history found.</td>
             </tr>
             {% endfor %}
         </tbody>

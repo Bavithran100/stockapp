@@ -46,6 +46,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', {'username': username})
 
 def add_stock_item(request):
+    from .models import StockUpdateLog
     username = request.session.get('username')
     if not username:
         return redirect('login')
@@ -65,6 +66,10 @@ def add_stock_item(request):
                 quantity=quantity
             )
             stock_item.save()
+            # Log the insert action with details
+            details = f"Added item with quantity: {quantity}, date: {date}, time: {time}, bought from: {where_bought_from}"
+            log = StockUpdateLog(action='insert', item_name=item_name, details=details)
+            log.save()
             messages.success(request, 'Stock item added successfully.')
             return redirect('dashboard')
     else:
@@ -91,6 +96,20 @@ def view_stock_items(request):
 
     return render(request, 'view_stock_items.html', {'stock_items': stock_items, 'query': query})
 
+def history(request):
+    from .models import StockUpdateLog
+    username = request.session.get('username')
+    if not username:
+        return redirect('login')
+
+    query = request.GET.get('q', '')
+    if query:
+        logs = StockUpdateLog.objects(item_name__icontains=query).order_by('-timestamp')
+    else:
+        logs = StockUpdateLog.objects().order_by('-timestamp')
+
+    return render(request, 'history.html', {'logs': logs, 'query': query})
+
 def low_stock_alerts(request):
     username = request.session.get('username')
     if not username:
@@ -101,6 +120,7 @@ def low_stock_alerts(request):
     return render(request, 'low_stock_alerts.html', {'stock_items': low_stock_items})
 
 def delete_stock_items(request):
+    from .models import StockUpdateLog
     username = request.session.get('username')
     if not username:
         return redirect('login')
@@ -110,9 +130,21 @@ def delete_stock_items(request):
         stock_items = StockItem.objects(item_name__icontains=query)
     else:
         stock_items = StockItem.objects()
+    if request.method == 'POST':
+        item_id = request.POST.get('item_id')
+        stock_item = StockItem.objects(id=item_id).first()
+        if stock_item:
+            # Log the delete action with details
+            details = f"Deleted item with quantity: {stock_item.quantity}, date: {stock_item.date}, time: {stock_item.time}, bought from: {stock_item.where_bought_from}"
+            log = StockUpdateLog(action='delete', item_name=stock_item.item_name, details=details)
+            log.save()
+            stock_item.delete()
+            messages.success(request, 'Stock item deleted successfully.')
+            return redirect('delete_stock_items')
     return render(request, 'delete_stock_items.html', {'stock_items': stock_items, 'query': query})
 
 def edit_stock_item(request, item_id):
+    from .models import StockUpdateLog
     username = request.session.get('username')
     if not username:
         return redirect('login')
@@ -124,6 +156,10 @@ def edit_stock_item(request, item_id):
 
     if request.method == 'POST':
         if 'delete' in request.POST:
+            # Log the delete action with details
+            details = f"Deleted item with quantity: {stock_item.quantity}, date: {stock_item.date}, time: {stock_item.time}, bought from: {stock_item.where_bought_from}"
+            log = StockUpdateLog(action='delete', item_name=stock_item.item_name, details=details)
+            log.save()
             stock_item.delete()
             messages.success(request, "Stock item deleted successfully.")
             return redirect('delete_stock_items')
@@ -143,6 +179,12 @@ def edit_stock_item(request, item_id):
             messages.error(request, "Invalid quantity.")
             return render(request, 'edit_stock_item.html', {'stock_item': stock_item})
 
+        old_item_name = stock_item.item_name
+        old_time = stock_item.time
+        old_date = stock_item.date
+        old_where_bought_from = stock_item.where_bought_from
+        old_quantity = stock_item.quantity
+
         stock_item.update(
             set__item_name=item_name,
             set__time=time,
@@ -150,6 +192,11 @@ def edit_stock_item(request, item_id):
             set__where_bought_from=where_bought_from,
             set__quantity=quantity
         )
+        # Log the update action with details
+        details = f"Old values - item_name: {old_item_name}, time: {old_time}, date: {old_date}, where_bought_from: {old_where_bought_from}, quantity: {old_quantity}; New values - item_name: {item_name}, time: {time}, date: {date}, where_bought_from: {where_bought_from}, quantity: {quantity}"
+        log = StockUpdateLog(action='update', item_name=item_name, details=details)
+        log.save()
+
         messages.success(request, "Stock item updated successfully.")
         return redirect('delete_stock_items')
 

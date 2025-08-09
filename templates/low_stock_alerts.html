@@ -2,108 +2,37 @@
 <html>
 <head>
     <title>Low Stock Alerts</title>
-    <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #f9e0e0 0%, #f3c6c6 100%);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background: white;
-            padding: 30px 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 600px;
-            animation: fadeIn 0.8s ease forwards;
-            text-align: center;
-        }
-        h2 {
-            margin-bottom: 30px;
-            font-weight: 700;
-            color: #b22222;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-        th, td {
-            padding: 12px 15px;
-            border: 1px solid #ddd;
-        }
-        th {
-            background-color: #f7d7d7;
-            font-weight: 700;
-            text-align: center;
-        }
-        td {
-            text-align: center;
-        }
-        .no-items {
-            font-size: 18px;
-            color: #b22222;
-            margin-top: 20px;
-        }
-    </style>
+    {% load static %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/dashboard.css' %}">
 </head>
 <body>
-    <div class="container">
-        <h2>Low Stock Alerts</h2>
-        {% if stock_items %}
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Time</th>
-                    <th>Date</th>
-                    <th>Source</th>
-                    <th>Quantity</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in stock_items %}
-                <tr>
-                    <td>{{ item.item_name }}</td>
-                    <td>{{ item.time }}</td>
-                    <td>{{ item.date }}</td>
-                    <td>{{ item.where_bought_from }}</td>
-                    <td>{{ item.quantity }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% else %}
-        <p class="no-items">No low stock items found.</p>
-        {% endif %}
-    </div>
-    <a href="{% url 'dashboard' %}" class="fixed-dashboard-button">Back to Dashboard</a>
-    <style>
-        .fixed-dashboard-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #b22222;
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            transition: background-color 0.3s ease;
-            z-index: 1000;
-        }
-        .fixed-dashboard-button:hover {
-            background-color: #7a1616;
-        }
-    </style>
+    <a href="{% url 'dashboard' %}" class="back-to-dashboard">← Back to Dashboard</a>
+    <h2>Low Stock Alerts</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Time</th>
+                <th>Date</th>
+                <th>Where Bought From</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in stock_items %}
+            <tr>
+                <td>{{ item.item_name }}</td>
+                <td>{{ item.time }}</td>
+                <td>{{ item.date }}</td>
+                <td>{{ item.where_bought_from }}</td>
+                <td>{{ item.quantity }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No low stock items found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>

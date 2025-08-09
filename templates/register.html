@@ -5,9 +5,10 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #c3ecf7 0%, #e8d7f1 100%);
+            background-color: black;
             margin: 0;
             padding: 0;
+            color: white;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
@@ -16,30 +17,32 @@
         .container {
             max-width: 400px;
             margin: 80px auto;
-            background: white;
+            background: #1a1a1a;
             border-radius: 15px;
             padding: 40px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(244, 67, 54, 0.7);
             text-align: center;
             animation: fadeIn 0.8s ease forwards;
         }
         h2 {
             font-weight: 700;
-            color: #333;
+            color: #f44336;
             margin-bottom: 30px;
         }
         input[type="text"], input[type="password"] {
             width: 100%;
             padding: 12px 15px;
             margin: 10px 0 20px 0;
-            border: 1px solid #ccc;
+            border: 1px solid #f44336;
             border-radius: 10px;
             box-sizing: border-box;
             font-size: 16px;
+            background-color: black;
+            color: white;
         }
         button {
             width: 100%;
-            background-color: #007bff;
+            background-color: #f44336;
             color: white;
             border: none;
             border-radius: 12px;
@@ -49,11 +52,11 @@
             transition: background-color 0.3s ease, transform 0.2s ease;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #d32f2f;
             transform: scale(1.05);
         }
         .messages {
-            color: red;
+            color: #ff6b6b;
             margin-bottom: 15px;
         }
     </style>
@@ -73,7 +76,7 @@
             {{ form.as_p }}
             <button type="submit">Register</button>
         </form>
-        <p>Already have an account? <a href="{% url 'login' %}">Login here</a></p>
+        <p style="margin-top: 20px;">Already have an account? <a href="{% url 'login' %}" style="color:#f44336;">Login here</a></p>
     </div>
 </body>
 </html>
