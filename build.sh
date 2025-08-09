@@ -8,7 +8,7 @@ pip install -r requirements.txt
 # Collect static files
 python manage.py collectstatic --noinput
 
-# Apply any pending migrations (if using Django ORM)
-# python manage.py migrate
+# Apply any pending migrations
+python manage.py migrate --run-syncdb
 
 echo "Build completed successfully!"
