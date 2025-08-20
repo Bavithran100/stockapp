@@ -21,6 +21,13 @@ DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',')
 if '*' in ALLOWED_HOSTS:
     ALLOWED_HOSTS = ['*']
+else:
+    # Add specific hosts for Render deployment
+    ALLOWED_HOSTS.extend([
+        'stockapp-5.onrender.com',
+        'stock-track-pro.onrender.com',
+        '*.onrender.com'
+    ])
 
 # Add CSRF trusted origins for Render
 CSRF_TRUSTED_ORIGINS = [
